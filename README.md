@@ -2,7 +2,7 @@
 
 Homepage.html is my main html page.
 
-Note : While giving input for Leaving from and Going to please enter backspace for one or two times and after giving every input please wait for sometime because for fetching data it takes some times.  
+Note : While giving input for Leaving from and Going to please enter backspace for one or two times and after giving every input please wait for atleast 10/20 seconds because for fetching data it takes some times.  
 
 I have used fetch for autocomplete and flight data inside of vue. For autocomplete i have used basic javascript and vue.js inside a function named autocomplete.
 
