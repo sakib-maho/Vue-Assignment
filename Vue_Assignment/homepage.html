@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue">
+    </script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="animation.css">
+    <style>
+        #div1 {
+            width: 180px;
+            height: 170px;
+            border: 1px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font: 16px Arial;
+        }
+
+        /*the container must be positioned relative:*/
+        .autocomplete {
+            position: relative;
+            display: inline-block;
+        }
+
+        input {
+            border: 1px solid transparent;
+            background-color: #f1f1f1;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        input[type=text] {
+            background-color: #f1f1f1;
+            width: 100%;
+        }
+
+        input[type=submit] {
+            background-color: DodgerBlue;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            /*position the autocomplete items to be the same width as the container:*/
+            top: 100%;
+            left: 0;
+            right: 0;
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        /*when hovering an item:*/
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+
+        /*when navigating through the items using the arrow keys:*/
+        .autocomplete-active {
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+        }
+    </style>
+    <!-- <script src="autocomplete.js"></script> -->
+</head>
+
+<body>
+
+
+    <!-- Animation -->
+    <div id="spinner" style="display: none;" class="frame">
+        <div class="plane-container">
+            <a href="http://customer.io/" target="_blank">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+                    y="0px" width="1131.53px" height="379.304px" viewBox="0 0 1131.53 379.304"
+                    enable-background="new 0 0 1131.53 379.304" xml:space="preserve" class="plane">
+                    <polygon fill="#D8D8D8"
+                        points="72.008,0 274.113,140.173 274.113,301.804 390.796,221.102 601.682,367.302 1131.53,0.223  " />
+                    <polygon fill="#C4C4C3" points="1131.53,0.223 274.113,140.173 274.113,301.804 390.796,221.102   " />
+                </svg></a>
+
+        </div>
+    </div>
+    </div>
+    <div id="spinner1" style="display: none;" class="clouds">
+
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="762px" height="331px" viewBox="0 0 762 331" enable-background="new 0 0 762 331" xml:space="preserve"
+            class="cloud big front slowest">
+            <path fill="#FFFFFF" d="M715.394,228h-16.595c0.79-5.219,1.201-10.562,1.201-16c0-58.542-47.458-106-106-106
+c-8.198,0-16.178,0.932-23.841,2.693C548.279,45.434,488.199,0,417.5,0c-84.827,0-154.374,65.401-160.98,148.529
+C245.15,143.684,232.639,141,219.5,141c-49.667,0-90.381,38.315-94.204,87H46.607C20.866,228,0,251.058,0,279.5
+S20.866,331,46.607,331h668.787C741.133,331,762,307.942,762,279.5S741.133,228,715.394,228z" />
+        </svg>
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="762px" height="331px" viewBox="0 0 762 331" enable-background="new 0 0 762 331" xml:space="preserve"
+            class="cloud distant smaller">
+            <path fill="#FFFFFF" d="M715.394,228h-16.595c0.79-5.219,1.201-10.562,1.201-16c0-58.542-47.458-106-106-106
+c-8.198,0-16.178,0.932-23.841,2.693C548.279,45.434,488.199,0,417.5,0c-84.827,0-154.374,65.401-160.98,148.529
+C245.15,143.684,232.639,141,219.5,141c-49.667,0-90.381,38.315-94.204,87H46.607C20.866,228,0,251.058,0,279.5
+S20.866,331,46.607,331h668.787C741.133,331,762,307.942,762,279.5S741.133,228,715.394,228z" />
+        </svg>
+
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="762px" height="331px" viewBox="0 0 762 331" enable-background="new 0 0 762 331" xml:space="preserve"
+            class="cloud small slow">
+            <path fill="#FFFFFF" d="M715.394,228h-16.595c0.79-5.219,1.201-10.562,1.201-16c0-58.542-47.458-106-106-106
+c-8.198,0-16.178,0.932-23.841,2.693C548.279,45.434,488.199,0,417.5,0c-84.827,0-154.374,65.401-160.98,148.529
+C245.15,143.684,232.639,141,219.5,141c-49.667,0-90.381,38.315-94.204,87H46.607C20.866,228,0,251.058,0,279.5
+S20.866,331,46.607,331h668.787C741.133,331,762,307.942,762,279.5S741.133,228,715.394,228z" />
+        </svg>
+
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="762px" height="331px" viewBox="0 0 762 331" enable-background="new 0 0 762 331" xml:space="preserve"
+            class="cloud distant super-slow massive">
+            <path fill="#FFFFFF" d="M715.394,228h-16.595c0.79-5.219,1.201-10.562,1.201-16c0-58.542-47.458-106-106-106
+c-8.198,0-16.178,0.932-23.841,2.693C548.279,45.434,488.199,0,417.5,0c-84.827,0-154.374,65.401-160.98,148.529
+C245.15,143.684,232.639,141,219.5,141c-49.667,0-90.381,38.315-94.204,87H46.607C20.866,228,0,251.058,0,279.5
+S20.866,331,46.607,331h668.787C741.133,331,762,307.942,762,279.5S741.133,228,715.394,228z" />
+        </svg>
+
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            width="762px" height="331px" viewBox="0 0 762 331" enable-background="new 0 0 762 331" xml:space="preserve"
+            class="cloud slower">
+            <path fill="#FFFFFF" d="M715.394,228h-16.595c0.79-5.219,1.201-10.562,1.201-16c0-58.542-47.458-106-106-106
+c-8.198,0-16.178,0.932-23.841,2.693C548.279,45.434,488.199,0,417.5,0c-84.827,0-154.374,65.401-160.98,148.529
+C245.15,143.684,232.639,141,219.5,141c-49.667,0-90.381,38.315-94.204,87H46.607C20.866,228,0,251.058,0,279.5
+S20.866,331,46.607,331h668.787C741.133,331,762,307.942,762,279.5S741.133,228,715.394,228z" />
+        </svg>
+
+    </div>
+
+    <!-- Animation End -->
+
+    <!-- Modal for leaving from -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Select a departure city</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="autocomplete" style="width:300px;">
+                        <label for="exampleInputEmail1">LEAVING FROM</label>
+                        <input type="text" class="form-control" id="myInput" placeholder="Enter city name or city code">
+
+                        <!-- <input id="myInput" type="text" name="myCountry" placeholder="Country"> -->
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="l_data()">Save
+                        changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Going to -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel1">Select a destination city</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="autocomplete" style="width:300px;">
+                        <label>GOING TO</label>
+                        <br>
+                        <input type="text" class="form-control" id="myInput1" onclick="going()"
+                            placeholder="Enter city name or city code">
+
+                        <!-- <input id="myInput" type="text" name="myCountry" placeholder="Country"> -->
+                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="g_data()">Save
+                        changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Dates -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel2">Select a destination city</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <input style="width: 140px; height: 35px;" id="checkInDate" type="text" class="form-controll"
+                        placeholder="Departing date">
+                    <input style="width: 140px; height: 35px;" id="checkOutDate" type="text" class="form-controll"
+                        placeholder="Returning date">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="s_date()">Save
+                        changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div id="app">
+        <div id="mainbody" class="container  p-4 shadow ">
+            <h1 style="padding: 1px;">Ready for your next trip? Book with us now.</h1>
+            <div class="row">
+                <div class="col">
+                    <div class="card ">
+                        <div class="card-body">
+                            <h5 class="card-title">Fligths</h5>
+                            <hr>
+                            <div style="display: flex;">
+                                <span>Redmeen flights</span>
+                                <span style="padding-left: 50px; ">Multi-city / stopover</span>
+                            </div>
+                            <!-- <p style="padding-top: 20px;" class="card-text">This is a wider card with supporting text below
+                                as a natural lead-in to
+                                additional content. This content is a little bit longer.</p> -->
+                            <div style="display: flex;">
+                                <div id="div1" class="shadow p-3 bg-white rounded" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                    <h5 style="padding-top: 10px;">Leaving from</h5>
+
+                                    <h1 id="leaving_city_code">DAC</h1>
+
+
+                                    <h3 id="leaving_city_name">Dhaka</h3>
+                                    <br>
+                                </div>
+                                <div id="div1" class="shadow p-3 bg-white rounded" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal1">
+                                    <h5 style="padding-top: 10px;">Going to</h5>
+                                    <h1 id="going_city_code">DAC</h1>
+
+
+                                    <h3 id="going_city_name">Dhaka</h3>
+                                </div>
+                                <div @click="weather" id="div1" class="shadow p-3 bg-white rounded"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                                    <h5 style="padding-top: 10px;">Departing on</h5>
+                                    <p id="departing_date">12 Nov 1212</p>
+
+                                    <h5>Returning on</h5>
+                                    <p id="returning_date">12 Nov 1212</p>
+                                </div>
+                                <div @click="getStories" class=" p-3 bg-white rounded"><img
+                                        src="https://images-na.ssl-images-amazon.com/images/I/61M4AdxuYVL.png"
+                                        height="150px" width="160px">
+                                </div>
+
+                            </div>
+                            <div style="display: flex; padding-top: 20px;">
+                                <div> <span style="padding-right: 10px;">Return</span> <i
+                                        class="fa-solid fa-chevron-down"></i></div>
+                                <div><span style="padding-left: 50px; padding-right: 10px; ">Economy, 1 Adult </span><i
+                                        class="fa-solid fa-chevron-down"></i>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!-- <img src="..." class="card-img-bottom" alt="..."> -->
+
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-around; background-color: rgb(35, 87, 88); padding: 10px;   margin-top: 40px;">
+                        <div style="display: flex; flex-direction: column; justify-content: center;"><i
+                                style="color: white;" class="fa-solid fa-bars text-center fa-lg p-3"></i><span
+                                style="color: white;">Manage booking</span></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="color: white;">|</span>
+                            <span style="color: white;">|</span>
+                            <span style="color: white;">|</span>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; justify-content: center;"><i
+                                style="color: white;" class="fa-solid fa-ticket text-center fa-lg p-3"></i><span
+                                style="color: white;">Check in</span></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="color: white;">|</span>
+                            <span style="color: white;">|</span>
+                            <span style="color: white;">|</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: center;"><i
+                                style="color: white;" class="fa-solid fa-right-left text-center fa-lg p-3"></i><span
+                                style="color: white;">Rebook and refund</span></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="color: white;">|</span>
+                            <span style="color: white;">|</span>
+                            <span style="color: white;">|</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column; justify-content: center;"><i
+                                style="color: white;" class="fa-solid fa-plane-slash text-center fa-lg p-3"></i><span
+                                style="color: white;">Covid-19 updates</span></div>
+
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- <div class="col-md-4"> -->
+                    <img style="height: 90%; width: 70%;"
+                        src="https://images.pexels.com/photos/3355788/pexels-photo-3355788.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                        class="img-fluid rounded-start" alt="...">
+                    <!-- </div> -->
+                </div>
+
+            </div>
+        </div>
+
+
+        
+        <div id="flight_information" style="display: none;">
+
+            <div class="container p-4">
+                <button @click="homepage_show_button" id="homepage_button" style="display: none;" type="button"
+                    class="btn btn-warning btn-lg btn-block">Back to Homepage</button>
+                <br>
+                <div class="card mb-3">
+                   
+                    <div class="card-body">
+                        <h5 class="card-title">Weather in: <span>{{ origin_name }}</span></h5>
+                    
+                        <div style="display: flex; justify-content: space-around;">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="text-align: center;">Moring</span>
+                                <h2 style="color: blue; text-align: center;">{{morning_temp}}°</h2>
+                                <i style="text-align: center;" class="fas fa-cloud-sun fa-2x"></i>
+                                <br>
+                                <span style="text-align: center;">{{morning_rain}}%</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="text-align: center;">Afternoon</span>
+                                <h2 style="color: blue; text-align: center;">{{afternoon_temp}}°</h2>
+                                <i style="text-align: center;" class="fas fa-cloud-sun-rain fa-2x"></i>
+                                <br>
+                                <span style="text-align: center;">{{afternoon_rain}}%</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="text-align: center;">Evening</span>
+                                <h2 style="color: blue; text-align: center;">{{evening_temp}}°</h2>
+                                <i style="text-align: center;" class="fas fa-cloud-moon fa-2x"></i>
+
+                                <br>
+
+                                <span style="text-align: center;">{{evening_rain}}%</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column;">
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                                <span>|</span>
+                            </div>
+                            <div style="display: flex; flex-direction: column; align-content: center;">
+                                <span style="text-align: center;">Overnight</span>
+                                <h2 style="color: blue; text-align: center;">{{night_temp}}°</h2>
+
+                                <i style="text-align: center;" class="fas fa-cloud-moon fa-2x"></i>
+                                <br>
+                                <span style="text-align: center;">{{night_rain}}%</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <h3>Filter by:
+                    <select v-on:change="filter" id="selected" class="form-select p-1"
+                        aria-label="Default select example">
+                        <option selected>Open this select menu</option>
+                        <option value="Price">Price</option>
+                        <option value="Departure time">Departure time</option>
+                        <option value="Arrival time">Arrival time</option>
+                    </select>
+                </h3>
+
+
+
+            </div>
+            <div class="container p-4">
+                <div v-for="flight in flight_data" class="card m-2">
+                    <div class="card-body ">
+                        <div style="display: flex; justify-content: space-between; padding: 20px;">
+                            <div>
+                                <div style="display: flex; justify-content: space-between;"><span>
+                                        <h1 style="padding-right: 60px;">{{ flight.arrival_time }}</h1>
+                                    </span> <span style="padding-top: 10px;"><i style="padding-right: 20px;"
+                                            class="fas fa-plane-departure"></i> </span> <span
+                                        style="padding-top: 10px;">{{ flight.duration }}</span> <span
+                                        style="padding-top: 10px;"><i style="padding-left: 20px;"
+                                            class="fas fa-plane-arrival"></i> </span>
+                                    <span>
+                                        <h1 style="padding-left: 60px;">{{ flight.dept_time }}</h1>
+                                    </span>
+                                </div>
+
+                                <div style="display: flex;">
+                                    <h3>{{ flight.origin_code }}</h3>
+                                    <h3 style="padding-left: 313px;">{{ flight.dest_code }}</h3>
+                                </div>
+
+                            </div>
+                            <div>
+                                <span><span>{{ flight.f_code_1 }}{{ flight.f_no1 }} </span> <span><i
+                                            class="fas fa-chevron-right"></i></span>
+                                    <span>{{ flight.f_code_2 }}{{ flight.f_no2 }}</span></span>
+                                <br>
+                                <br>
+                                <span>View details <i class="fas fa-chevron-down"></i></span>
+                                <br>
+                                <br>
+                                <h4>Price: <span>{{ flight.price }}</span></h4>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+              
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script>
+        //var cityy = '';
+        var countries = [];
+        //var cityy = 'D';
+        var space = ' ';
+
+        var city = [];
+        let leaving_city_code;
+        let going_city_code;
+        let dDate;
+        let rDate;
+
+
+        document.getElementById("myInput").addEventListener("input", function () {
+            console.log(document.getElementById("myInput").value);
+            var cityy = document.getElementById("myInput").value;
+            city = [];
+            countries = [];
+            fetch('https://api.sharetrip.net/api/v1/flight/search/airport?name=' + cityy)
+                .then(ret => ret.json())
+                .then(data => {
+                    console.log(data);
+
+                    for (const key in data.response) {
+
+                        countries.push(data.response[key].iata + space + data.response[key].city + "-" + data.response[key].name);
+                        city.push(data.response[key].city);
+                        //console.log(data.response[key].iata, data.response[key].name);
+                    }
+                    //this.city_info = data;
+                });
+            console.log(city);
+            autocomplete(document.getElementById("myInput"), countries, city);
+        });
+
+
+        function autocomplete(inp, arr, city) {
+            var currentFocus;
+            /*execute a function when someone writes in the text field:*/
+            inp.addEventListener("input", function (e) {
+                // console.log(document.getElementById("myInput").value);
+                // cityy = document.getElementById("myInput").value;
+                //info();
+                var a, b, i, val = this.value;
+                /*close any already open lists of autocompleted values*/
+                closeAllLists();
+                if (!val) { return false; }
+                currentFocus = -1;
+                /*create a DIV element that will contain the items (values):*/
+                a = document.createElement("DIV");
+                a.setAttribute("id", this.id + "autocomplete-list");
+                a.setAttribute("class", "autocomplete-items");
+                /*append the DIV element as a child of the autocomplete container:*/
+                this.parentNode.appendChild(a);
+                /*for each item in the array...*/
+                for (i = 0; i < arr.length; i++) {
+                    /*check if the item starts with the same letters as the text field value:*/
+                    //console.log(arr[i].substr(0, val.length).toUpperCase());
+                    if (arr[i].substr(0, val.length).toUpperCase() != null) {
+                        /*create a DIV element for each matching element:*/
+                        b = document.createElement("DIV");
+                        /*make the matching letters bold:*/
+
+                        b.innerHTML = "<strong>" + city[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += city[i].substr(val.length);
+                        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                        b.innerHTML += arr[i].substr(val.length);
+                        /*insert a input field that will hold the current array item's value:*/
+
+
+                        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                        b.innerHTML += "<input type='hidden' value='" + city[i] + "'>";
+                        /*execute a function when someone clicks on the item value (DIV element):*/
+                        b.addEventListener("click", function (e) {
+                            /*insert the value for the autocomplete text field:*/
+                            inp.value = this.getElementsByTagName("input")[0].value;
+                            closeAllLists();
+                        });
+                        a.appendChild(b);
+                    }
+                }
+            });
+
+            inp.addEventListener("keydown", function (e) {
+
+                var x = document.getElementById(this.id + "autocomplete-list");
+
+                if (x) x = x.getElementsByTagName("div");
+                if (e.keyCode == 40) {
+                    currentFocus++;
+                    addActive(x);
+                } else if (e.keyCode == 38) {
+                    currentFocus--;
+                    addActive(x);
+                } else if (e.keyCode == 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1) {
+                        if (x) x[currentFocus].click();
+                    }
+                }
+            });
+            function addActive(x) {
+                if (!x) return false;
+                removeActive(x);
+                if (currentFocus >= x.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = (x.length - 1);
+                x[currentFocus].classList.add("autocomplete-active");
+            }
+            function removeActive(x) {
+                for (var i = 0; i < x.length; i++) {
+                    x[i].classList.remove("autocomplete-active");
+                }
+            }
+            function closeAllLists(elmnt) {
+                var x = document.getElementsByClassName("autocomplete-items");
+                for (var i = 0; i < x.length; i++) {
+                    if (elmnt != x[i] && elmnt != inp) {
+                        x[i].parentNode.removeChild(x[i]);
+                    }
+                }
+            }
+
+            document.addEventListener("click", function (e) {
+                closeAllLists(e.target);
+            });
+
+        }
+
+
+
+
+        function l_data() {
+            let data = document.getElementById("myInput").value;
+            let n_data = data.split("-");
+
+            let final_data = n_data[0].split(" ");
+            console.log(final_data);
+            leaving_city_code = final_data[0];
+            document.getElementById("leaving_city_code").innerHTML = final_data[0];
+            document.getElementById("leaving_city_name").innerHTML = final_data[1];
+            document.getElementById("myInput").value = " ";
+            //document.getElementById("myInput").Placeholder = "dsdsd";
+
+
+
+
+        }
+
+        function g_data() {
+            let data = document.getElementById("myInput1").value;
+            let n_data = data.split("-");
+
+            let final_data = n_data[0].split(" ");
+            console.log(final_data);
+            going_city_code = final_data[0];
+            document.getElementById("going_city_code").innerHTML = final_data[0];
+            document.getElementById("going_city_name").innerHTML = final_data[1];
+            document.getElementById("myInput1").value = " ";
+            //document.getElementById("myInput1").Placeholder = "dsdsd";
+
+
+
+
+        }
+
+
+        function s_date() {
+            let d_date = document.getElementById("checkInDate").value;
+            let r_date = document.getElementById("checkOutDate").value;
+            // checkInDate = d_date;
+            // checkOutDate = r_date;
+            document.getElementById("departing_date").innerHTML = d_date;
+            document.getElementById("returning_date").innerHTML = r_date;
+            dDate = document.getElementById("checkInDate").value;
+            rDate = document.getElementById("checkOutDate").value;
+            document.getElementById("checkInDate").value = "";
+            document.getElementById("checkOutDate").value = "";
+
+        }
+
+
+        function going() {
+            //var cityy = '';
+            var countries = [];
+            //var cityy = 'D';
+            var space = ' ';
+
+            var city = [];
+
+            console.log("asasas");
+
+
+            document.getElementById("myInput1").addEventListener("input", function () {
+                console.log(document.getElementById("myInput1").value);
+                var cityy = document.getElementById("myInput1").value;
+                city = [];
+                countries = [];
+                fetch('https://api.sharetrip.net/api/v1/flight/search/airport?name=' + cityy)
+                    .then(ret => ret.json())
+                    .then(data => {
+                        console.log(data);
+
+                        for (const key in data.response) {
+
+                            countries.push(data.response[key].iata + space + data.response[key].city + "-" + data.response[key].name);
+                            city.push(data.response[key].city);
+                            //console.log(data.response[key].iata, data.response[key].name);
+                        }
+                        //this.city_info = data;
+                    });
+                console.log(city);
+                autocomplete(document.getElementById("myInput1"), countries, city);
+            });
+
+
+            function autocomplete(inp, arr, city) {
+                var currentFocus;
+                /*execute a function when someone writes in the text field:*/
+                inp.addEventListener("input", function (e) {
+                    // console.log(document.getElementById("myInput").value);
+                    // cityy = document.getElementById("myInput").value;
+                    //info();
+                    var a, b, i, val = this.value;
+                    /*close any already open lists of autocompleted values*/
+                    closeAllLists();
+                    if (!val) { return false; }
+                    currentFocus = -1;
+                    /*create a DIV element that will contain the items (values):*/
+                    a = document.createElement("DIV");
+                    a.setAttribute("id", this.id + "autocomplete-list");
+                    a.setAttribute("class", "autocomplete-items");
+                    /*append the DIV element as a child of the autocomplete container:*/
+                    this.parentNode.appendChild(a);
+                    /*for each item in the array...*/
+                    for (i = 0; i < arr.length; i++) {
+                        /*check if the item starts with the same letters as the text field value:*/
+                        //console.log(arr[i].substr(0, val.length).toUpperCase());
+                        if (arr[i].substr(0, val.length).toUpperCase() != null) {
+                            /*create a DIV element for each matching element:*/
+                            b = document.createElement("DIV");
+                            /*make the matching letters bold:*/
+
+                            b.innerHTML = "<strong>" + city[i].substr(0, val.length) + "</strong>";
+                            b.innerHTML += city[i].substr(val.length);
+                            b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                            b.innerHTML += arr[i].substr(val.length);
+                            /*insert a input field that will hold the current array item's value:*/
+
+
+                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                            b.innerHTML += "<input type='hidden' value='" + city[i] + "'>";
+                            /*execute a function when someone clicks on the item value (DIV element):*/
+                            b.addEventListener("click", function (e) {
+                                /*insert the value for the autocomplete text field:*/
+                                inp.value = this.getElementsByTagName("input")[0].value;
+                                closeAllLists();
+                            });
+                            a.appendChild(b);
+                        }
+                    }
+                });
+
+                inp.addEventListener("keydown", function (e) {
+
+                    var x = document.getElementById(this.id + "autocomplete-list");
+
+                    if (x) x = x.getElementsByTagName("div");
+                    if (e.keyCode == 40) {
+                        currentFocus++;
+                        addActive(x);
+                    } else if (e.keyCode == 38) {
+                        currentFocus--;
+                        addActive(x);
+                    } else if (e.keyCode == 13) {
+                        e.preventDefault();
+                        if (currentFocus > -1) {
+                            if (x) x[currentFocus].click();
+                        }
+                    }
+                });
+                function addActive(x) {
+                    if (!x) return false;
+                    removeActive(x);
+                    if (currentFocus >= x.length) currentFocus = 0;
+                    if (currentFocus < 0) currentFocus = (x.length - 1);
+                    x[currentFocus].classList.add("autocomplete-active");
+                }
+                function removeActive(x) {
+                    for (var i = 0; i < x.length; i++) {
+                        x[i].classList.remove("autocomplete-active");
+                    }
+                }
+                function closeAllLists(elmnt) {
+                    var x = document.getElementsByClassName("autocomplete-items");
+                    for (var i = 0; i < x.length; i++) {
+                        if (elmnt != x[i] && elmnt != inp) {
+                            x[i].parentNode.removeChild(x[i]);
+                        }
+                    }
+                }
+
+                document.addEventListener("click", function (e) {
+                    closeAllLists(e.target);
+                });
+
+            }
+        }
+
+        //leaving_city_code = 'DAC'
+        // let dt = '2021-12-04';
+        // console.log("#####################################");
+        // console.log(dDate);
+        // console.log("#####################################");
+        let app = new Vue({
+            el: '#app',
+            //delimiters: ['<%', '%>'],
+            data: {
+                airlines_code: '',
+                origin_code: '',
+                destination_code: '',
+                arrival_time: '',
+                arrival_date: '',
+                departure_time: '',
+                departure_date: '',
+                duration: '',
+                flight_number_1: '',
+                flight_number_2: '',
+                flight_code_1: '',
+                flight_code_2: '',
+                full_data: '',
+                flight_data: [],
+                sorted_price: '',
+                sorted_AT: '',
+                tasks: [9, 4, 3, 7, 70],
+                origin_name: '',
+                avr_maxtemp_c: '',
+                avr_mintemp_c: '',
+                avr_avgtemp_c: '',
+                night_temp: '',
+                night_rain: '',
+                morning_temp: '',
+                morning_rain: '',
+                afternoon_temp: '',
+                afternoon_rain: '',
+                evening_temp: '',
+                evening_rain: '',
+
+
+            },
+            methods: {
+                getStories: function () {
+
+                    document.getElementById("mainbody").style.display = 'none';
+                    document.body.style.backgroundColor = '#85b9dd';
+                    document.getElementById("spinner").style.display = 'block';
+                    document.getElementById("spinner1").style.display = 'block';
+                    document.getElementById("flight_information").style.display = 'none';
+                    document.getElementById("homepage_button").style.display = 'none';
+
+                    fetch('https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=' + leaving_city_code + '&destination=' + going_city_code + '&depart=' + dDate + '&depart=' + rDate)
+                        .then(ret => ret.json())
+                        .then(data => {
+                            document.getElementById("spinner").style.display = 'none';
+                            document.getElementById("spinner1").style.display = 'none';
+                            document.getElementById("mainbody").style.display = 'none';
+                            document.getElementById("flight_information").style.display = 'block';
+                            document.getElementById("homepage_button").style.display = 'block';
+                            document.body.style.backgroundColor = "white";
+                            console.log(data.response.flights[0].flight[0]);
+                            //console.log(data);
+                            this.airlines_code = data.response.flights[0].flight[0].airlines.code;
+                            this.origin_code = data.response.flights[0].flight[0].originName.code;
+                            this.origin_name = data.response.flights[0].flight[0].destinationName.city;
+                            this.destination_code = data.response.flights[0].flight[0].destinationName.code;
+                            this.arrival_time = data.response.flights[0].flight[0].arrivalDateTime.time;
+                            this.departure_time = data.response.flights[0].flight[0].departureDateTime.time;
+                            this.duration = data.response.flights[0].flight[0].duration;
+                            this.flight_number_1 = data.response.flights[0].segments[0].segment[0].flightNumber;
+                            //this.flight_number_2 = data.response.flights[0].segments[0].segment[1].flightNumber;
+                            this.flight_code_1 = data.response.flights[0].segments[0].segment[0].airlinesCode;
+                            //this.flight_code_2 = data.response.flights[0].segments[0].segment[1].airlinesCode;
+                            this.full_data = data.response.flights[0].price;
+
+                            //console.log(data.response.flights[0]);
+                            for (let f in data.response.flights) {
+
+
+                                if (data.response.flights[f].segments[0].segment[1] == undefined) {
+
+                                    let at = data.response.flights[f].flight[0].arrivalDateTime.time;
+                                    let dt = data.response.flights[f].flight[0].departureDateTime.time;
+                                    let price = data.response.flights[f].price;
+                                    let f_no1 = data.response.flights[f].segments[0].segment[0].flightNumber;
+                                    //let f_no2 = data.response.flights[f].segments[0].segment[1].flightNumber;
+                                    let f_code_1 = data.response.flights[f].segments[0].segment[0].airlinesCode;
+                                    //let f_code_2 = data.response.flights[f].segments[0].segment[1].airlinesCode;
+                                    //let f_price = data.response.flights[f].price;
+                                    let o_code = data.response.flights[f].flight[0].originName.code;
+                                    let d_code = data.response.flights[f].flight[0].destinationName.code;
+                                    let t_duration = data.response.flights[f].flight[0].duration;
+                                    console.log("==================================================")
+                                    //console.log(at, dt, price, f_no1, f_no2, f_code_1, f_code_2, o_code, d_code, t_duration);
+                                    console.log(at, dt, price, f_no1, f_code_1, o_code, d_code, t_duration);
+                                    this.flight_data.push({ "arrival_time": at, "dept_time": dt, "price": price, "f_no1": f_no1, "f_code_1": f_code_1, "dest_code": d_code, "duration": t_duration, "origin_code": o_code });
+
+                                    //console.log("==================================================")
+
+                                } else {
+                                    this.flight_number_2 = data.response.flights[0].segments[0].segment[1].flightNumber;
+                                    this.flight_code_2 = data.response.flights[0].segments[0].segment[1].airlinesCode;
+                                    let at = data.response.flights[f].flight[0].arrivalDateTime.time;
+                                    let dt = data.response.flights[f].flight[0].departureDateTime.time;
+                                    let price = data.response.flights[f].price;
+                                    let f_no1 = data.response.flights[f].segments[0].segment[0].flightNumber;
+                                    let f_no2 = data.response.flights[f].segments[0].segment[1].flightNumber;
+                                    let f_code_1 = data.response.flights[f].segments[0].segment[0].airlinesCode;
+                                    let f_code_2 = data.response.flights[f].segments[0].segment[1].airlinesCode;
+                                    //let f_price = data.response.flights[f].price;
+                                    let o_code = data.response.flights[f].flight[0].originName.code;
+                                    let d_code = data.response.flights[f].flight[0].destinationName.code;
+                                    let t_duration = data.response.flights[f].flight[0].duration;
+
+                                    console.log("==================================================")
+                                    console.log(at, dt, price, f_no1, f_no2, f_code_1, f_code_2, o_code, d_code, t_duration);
+                                    // console.log(at, dt, price, f_no1, f_code_1, o_code, d_code, t_duration);
+                                    this.flight_data.push({ "f_code_2": f_code_2, "f_no2": f_no2, "arrival_time": at, "dept_time": dt, "price": price, "f_no1": f_no1, "f_code_1": f_code_1, "dest_code": d_code, "duration": t_duration, "origin_code": o_code });
+
+                                    console.log("==================================================")
+
+                                }
+
+                            }
+                            // document.querySelector('#wall').classList.remove('loading');
+                        });
+                },
+                sort_price: function () {
+                    console.log("sasas");
+                    this.sorted_price = this.flight_data.sort((a, b) => (a.price > b.price ? 1 : -1));
+
+                    //console.log(this.sorted_price);
+
+                },
+                weather: function () {
+                 
+                    let city;
+                    let country;
+                    let avr_night_temp = 0;
+                    let avr_night_rain = 0;
+                    let avr_morning_temp = 0;
+                    let avr_morning_rain = 0;
+                    let avr_afternoon_temp = 0;
+                    let avr_afternoon_rain = 0;
+                    let avr_evening_temp = 0;
+                    let avr_evening_rain = 0;
+                    
+                   
+                    let going_city = document.getElementById('going_city_name').innerHTML;
+
+                    fetch('https://weatherapi-com.p.rapidapi.com/forecast.json?q=' + going_city + '&days=1', {
+                        "method": "GET",
+                        "headers": {
+                            "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+                            "x-rapidapi-key": "c34f585326msh0e3377ac7a481eap1958ddjsn61d6ffaf55f7"
+                        }
+                    })
+
+
+                        .then(response => response.json())
+
+                        .then(response => {
+                            console.log(response.location.name);
+                            city = response.location.name;
+                            console.log(response.location.country);
+                            country = response.location.country;
+                            //console.log(response.forecast.forecastday[0].day);
+                            console.log("Day 1");
+                            console.log("maxtemp_c:", response.forecast.forecastday[0].day.maxtemp_c);
+                            console.log("maxtemp_f:", response.forecast.forecastday[0].day.maxtemp_f);
+                            console.log("mintemp_c:", response.forecast.forecastday[0].day.mintemp_c);
+                            console.log("mintemp_f:", response.forecast.forecastday[0].day.mintemp_f);
+                            console.log("avgtemp_c:", response.forecast.forecastday[0].day.avgtemp_c);
+                            console.log("avgtemp_f:", response.forecast.forecastday[0].day.avgtemp_f);
+
+                            console.log("Night:", response.forecast.forecastday[0].hour);
+
+                            for (let index = 0; index < response.forecast.forecastday[0].hour.length; index++) {
+
+                                if (index >= 0 && index <= 5) {
+                                    avr_night_temp = avr_night_temp + Number(response.forecast.forecastday[0].hour[index].temp_c)
+                                    avr_night_rain = avr_night_rain + Number(response.forecast.forecastday[0].hour[index].chance_of_rain)
+                                    // console.log(response.forecast.forecastday[0].hour[index].temp_c);
+                                    // console.log(response.forecast.forecastday[0].hour[index].chance_of_rain);
+                                } else if(index >= 6 && index <= 11) {
+                                    avr_morning_temp = avr_morning_temp + Number(response.forecast.forecastday[0].hour[index].temp_c)
+                                    avr_morning_rain = avr_morning_rain + Number(response.forecast.forecastday[0].hour[index].chance_of_rain)
+                                }else if(index >= 12 && index <= 18) {
+                                    avr_afternoon_temp = avr_afternoon_temp + Number(response.forecast.forecastday[0].hour[index].temp_c)
+                                    avr_afternoon_rain = avr_afternoon_rain + Number(response.forecast.forecastday[0].hour[index].chance_of_rain)
+                                }else{
+                                    avr_evening_temp = avr_evening_temp + Number(response.forecast.forecastday[0].hour[index].temp_c)
+                                    avr_evening_rain = avr_evening_rain + Number(response.forecast.forecastday[0].hour[index].chance_of_rain)
+                               
+                                }
+
+
+                            }
+
+                            this.night_temp = Math.round(avr_night_temp / 6);
+                            this.night_rain = Math.round(avr_night_rain / 6);
+
+                            this.morning_temp = Math.round(avr_morning_temp / 6);
+                            this.morning_rain = Math.round(avr_morning_rain / 6);
+
+                            this.afternoon_temp = Math.round(avr_afternoon_temp / 6) ;
+                            this.afternoon_rain = Math.round(avr_afternoon_rain / 6);
+                            
+                            this.evening_temp = Math.round(avr_evening_temp / 6);
+                            this.evening_rain = Math.round(avr_evening_rain / 6);
+
+                        })
+                        .catch(err => {
+                            console.error(err);
+                        });
+
+                    //console.log(this.sorted_price);
+
+                },
+                homepage_show_button: function () {
+                    //console.log("sasas");
+                    document.getElementById("spinner").style.display = 'none';
+                    document.getElementById("spinner1").style.display = 'none';
+                    document.getElementById("mainbody").style.display = 'block';
+                    document.getElementById("flight_information").style.display = 'none';
+                    document.getElementById("homepage_button").style.display = 'none';
+                    //console.log(this.sorted_price);
+                    document.getElementById("selected").value = 'Open this select menu';
+                    this.flight_data = [];
+
+
+                },
+                load: function () {
+                    document.getElementById("mainbody").style.display = 'none';
+                    document.body.style.backgroundColor = '#85b9dd';
+                    document.getElementById("spinner").style.display = 'block';
+                    document.getElementById("spinner1").style.display = 'block';
+                    // spinner1.removeAttribute('hidden');
+                    fetch('https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=DAC&destination=DXB&depart=2021-12-25&depart=2021-12-30')
+                        .then(response => response.json())
+                        .then(data => {
+                            document.getElementById("spinner").style.display = 'none';
+                            document.getElementById("spinner1").style.display = 'none';
+                            document.getElementById("mainbody").style.display = 'block';
+                            document.body.style.backgroundColor = "white";
+                            console.log(data)
+                        });
+
+                },
+                filter: function () {
+                    var x = document.getElementById("selected").value;
+                    if (x == 'Price') {
+                        console.log('Price............');
+                        this.sorted_price = this.flight_data.sort((a, b) => (a.price > b.price ? 1 : -1));
+
+                    } else if (x == 'Departure time') {
+                        //  block of code to be executed if the condition1 is false and condition2 is true
+                        console.log('Depart...............');
+                        this.flight_data = this.flight_data.sort(function (a, b) {
+                            return a.arrival_time.localeCompare(b.arrival_time);
+                        });
+                       
+                      
+                    }
+                    else if (x == 'Arrival time') {
+                        this.flight_data = this.flight_data.sort(function (a, b) {
+                            return a.dept_time.localeCompare(b.dept_time);
+                        });
+                        //this.sorted_AT = this.flight_data.sort((a, b) => (a.arrival_time > b.arrival_time ? 1 : -1));
+
+                    }
+                }
+
+
+            }
+
+        });
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script src="./date.js"></script>
+
+</body>
+
+</html>
