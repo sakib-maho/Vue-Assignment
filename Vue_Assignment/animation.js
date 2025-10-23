@@ -1,3 +1,9 @@
+/**
+ * Copyright (c) 2025 sakib-maho
+ * Licensed under the MIT License
+ * See LICENSE file for details
+ */
+
 function loadData() {
     document.body.style.backgroundColor = '#85b9dd';
     document.getElementById("spinner").style.display = 'block';
